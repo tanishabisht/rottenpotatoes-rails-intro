@@ -13,6 +13,7 @@ class MoviesController < ApplicationController
       @ratings_to_show = @all_ratings
     end
     @movies = Movie.with_ratings(@ratings_to_show).order(params[:sort])
+    @highlight_column = params[:sort]
   end
 
   def new
