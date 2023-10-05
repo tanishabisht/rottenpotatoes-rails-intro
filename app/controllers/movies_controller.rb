@@ -7,16 +7,23 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
-  
+
+    if (params[:sort].blank? && params[:ratings].blank?) && (session[:sort] != nil || session[:ratings] != nil)
+      redirect_to movies_path(sort: session[:sort], ratings: session[:ratings])
+    end
+
     session[:sort] = params[:sort] || session[:sort]
     session[:ratings] = params[:ratings] || session[:ratings]
-  
+
     params[:sort] ||= session[:sort]
     params[:ratings] ||= session[:ratings]
-  
+
     @ratings_to_show = params[:ratings] ? params[:ratings].keys : (session[:ratings] || Movie.all_ratings)
     @movies = Movie.with_ratings(@ratings_to_show).order(params[:sort])
     @highlight_column = params[:sort]
+
+    # # Redirect to the updated URL with session data
+    # redirect_to movies_path(sort: params[:sort], ratings: params[:ratings]) unless params[:sort].blank? && params[:ratings].blank?
   end
 
   def new
